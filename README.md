@@ -44,3 +44,6 @@ Pagination: The transactions are displayed with pagination. You can navigate bet
 
 License
 This project is open-source and available under the MIT License.
+## 🎥 Demo Video
+
+<video src="demo.mp4" controls width="600"></video>
