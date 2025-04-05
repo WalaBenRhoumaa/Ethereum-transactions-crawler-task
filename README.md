@@ -46,4 +46,5 @@ License
 This project is open-source and available under the MIT License.
 ## 🎥 Demo Video
 
-<video src="demo.mp4" controls width="600"></video>
+Watch a short demo of the Ethereum Transactions Crawler in action:  
+[▶️ Click here to watch the video](https://drive.google.com/file/d/1w1D-1MrHjTh96XxiUBK1WlBGm8rde-Jy/view?usp=sharing)
