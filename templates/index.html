@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ethereum Wallet Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007BFF;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background-color: #0056b3;
+        }
+
+        .pagination span {
+            margin: 0 5px;
+            color: #555;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h2>Enter Wallet Address and Start Block</h2>
+    <form method="POST">
+        <input type="text" name="address" placeholder="Wallet Address" required>
+        <input type="text" name="start_block" placeholder="Start Block" required>
+        <input type="date" name="date" placeholder="YYYY-MM-DD">
+        <button type="submit">Fetch Transactions</button>
+    </form>
+
+    {% if transactions %}
+        <h3>Total Transactions: {{ transaction_count }}</h3>
+        <h3>Transactions (Page {{ page }}):</h3>
+        <ul>
+            {% for tx in transactions %}
+                <li>
+                    From: {{ tx['from'] }}<br>
+                    To: {{ tx['to'] }}<br>
+                    {% if tx['tokenName'] %}
+                        Token: {{ tx['tokenName'] }} ({{ tx['tokenSymbol'] }})<br>
+                        Value: {{ (tx['value'] | float) / (10 ** (tx['tokenDecimal'] | int)) }} {{ tx['tokenSymbol'] }}<br>
+                    {% else %}
+                        Value: {{ (tx['value'] | float) / 1e18 }} ETH<br>
+                    {% endif %}
+                    Hash: <a href="https://etherscan.io/tx/{{ tx['hash'] }}" target="_blank">{{ tx['hash'] }}</a><br>
+                    Block: {{ tx['blockNumber'] }}<br>
+                    <hr>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ page - 1 }}">Prev</a>
+            {% endif %}
+
+            {% if page > 3 %}
+                <span>...</span>
+            {% endif %}
+
+            {% for p in range(page - 2, page + 3) %}
+                {% if 1 <= p <= total_pages %}
+                    <a href="?page={{ p }}" class="{% if p == page %}active{% endif %}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages - 2 %}
+                <span>...</span>
+            {% endif %}
+
+            {% if page < total_pages %}
+                <a href="?page={{ page + 1 }}">Next</a>
+                <a href="?page={{ total_pages }}">Last &raquo;</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if balance is not none %}
+        <h3>Balance on that date: {{ balance }} ETH</h3>
+    {% endif %}
+</body>
+</html>
